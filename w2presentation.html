@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python with AI for Dxxxy - Integrated Presentation</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Apply Inter font and basic styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff; /* White background */
+            color: #1a1a1a; /* Dark text for contrast */
+            line-height: 1.6;
+        }
+        /* Custom classes for headings to ensure consistent styling */
+        .section-heading {
+            font-size: 3rem; /* Large title for each section */
+            font-weight: 700; /* Bold */
+            letter-spacing: -0.05em; /* Tighten letter spacing */
+            padding-top: 4rem; /* Padding for anchor links to prevent content from being hidden under fixed headers if any */
+            margin-bottom: 2rem;
+        }
+        .sub-heading {
+            font-size: 2rem; /* Subhead size */
+            font-weight: 600; /* Semi-bold */
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .content-section {
+            max-width: 800px; /* Limit content width for readability */
+            margin: 0 auto; /* Center content */
+            padding: 2rem;
+            padding-bottom: 4rem; /* Extra padding at bottom of each section */
+            border-bottom: 1px solid #f0f0f0; /* Subtle separator between sections */
+        }
+        .content-section:last-of-type {
+            border-bottom: none; /* No border for the last section */
+        }
+        pre {
+            background-color: #f5f5f5; /* Light gray background for code */
+            padding: 1.5rem;
+            border-radius: 0.75rem; /* Rounded corners */
+            overflow-x: auto; /* Allow horizontal scrolling for long lines */
+            font-family: 'SF Mono', 'Consolas', 'Monaco', monospace; /* Monospaced font for code */
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+            text-align: left; /* Ensure code snippets are left-aligned */
+        }
+        nav {
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        nav a {
+            background-color: #f0f0f0; /* Light gray button background */
+            color: #1a1a1a; /* Dark text */
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded pills */
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Subtle shadow */
+        }
+        nav a:hover {
+            background-color: #e0e0e0; /* Darker on hover */
+            transform: translateY(-1px); /* Slight lift effect */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); /* More pronounced shadow */
+        }
+        .final-page-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 4rem); /* Adjust for padding on body */
+            text-align: center;
+        }
+        .final-page-heading {
+            font-size: 3.5rem; /* Slightly larger for emphasis */
+            font-weight: 700;
+            letter-spacing: -0.05em;
+            margin-bottom: 1rem;
+        }
+        .final-page-sub-heading {
+            font-size: 2.25rem; /* Larger subhead */
+            font-weight: 600;
+            display: flex; /* Use flex to center content with emoji */
+            align-items: center;
+            gap: 1rem; /* Space between text and emoji */
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <!-- 0. Main Index Section -->
+    <section id="home" class="content-section text-center">
+        <h1 class="section-heading">Python with AI for Dxxxy</h1>
+
+        <h2 class="sub-heading">What's Python?</h2>
+        <p class="text-lg text-gray-700 leading-relaxed mt-4 mb-8 px-4">
+            Python is a popular programming language known for its simplicity and readability. It's like a versatile tool that can be used for many different tasks, from building websites to analyzing data. Its straightforward syntax makes it relatively easy for beginners to learn, even if they have no prior coding experience.
+        </p>
+
+        <h2 class="sub-heading">Major Benefits of Python</h2>
+        <ul class="text-left text-lg text-gray-700 space-y-3 list-disc list-inside px-8">
+            <li><strong>Interactivity & Personalization:</strong> Easily create programs that respond to user input and deliver tailored experiences.</li>
+            <li><strong>Scalability:</strong> Python can handle small scripts for quick tasks or grow into large, complex applications used by many users.</li>
+            <li><strong>Reusability & Flexibility:</strong> Its modular nature allows you to reuse code blocks and adapt them for various purposes, saving time and effort.</li>
+        </ul>
+
+        <h2 class="sub-heading">Can AI write Python code?</h2>
+        <p class="text-lg text-gray-700 leading-relaxed mt-4 mb-8 px-4">
+            Yes, AI agents like me can significantly assist in writing Python code. We can generate code snippets based on your descriptions, explain complex concepts, and even help debug errors by suggesting fixes. This makes the coding process faster and more accessible, allowing you to focus on your project's logic rather than syntax details.
+        </p>
+
+        <nav>
+            <a href="#welcome">1. Simple Greeting (Variables)</a>
+            <a href="#hello-modified">2. User Input (INPUT)</a>
+            <a href="#special-greeting">3. Making Decisions (If/Else)</a>
+            <a href="#questions">Questions? Ask AI!</a>
+        </nav>
+    </section>
+
+    <!-- 1. Simple Greeting (welcome.py) Section -->
+    <section id="welcome" class="content-section text-center">
+        <h1 class="section-heading">1. Simple Greeting (Variables)</h1>
+
+        <p class="text-lg text-gray-700 leading-relaxed mt-4 mb-8 px-4">
+            This script is our very first step into Python! It introduces the concept of a "variable," which is like a container for storing information (in this case, a name). The script simply prints a pre-defined welcome message, showing how easy it is to display text on the screen.
+        </p>
+
+        <h2 class="sub-heading">Code: `welcome.py`</h2>
+        <pre>
+def print_welcome_message():
+    name = "Yuko"
+    message = f"Hello my name is {name}. I'm learning AI to become an awesome AI Native builder."
+    print(message)
+
+if __name__ == "__main__":
+    print_welcome_message()
+        </pre>
+
+        <nav>
+            <a href="#home">Back to Main</a>
+            <a href="#hello-modified">Next: User Input</a>
+        </nav>
+    </section>
+
+    <!-- 2. Ask the user a question using INPUT (hello_modified.py) Section -->
+    <section id="hello-modified" class="content-section text-center">
+        <h1 class="section-heading">2. User Input (INPUT)</h1>
+
+        <p class="text-lg text-gray-700 leading-relaxed mt-4 mb-8 px-4">
+            Building on the first script, this version introduces user interaction. We use the `input()` function to ask the user for their name. Whatever the user types in is then stored in a variable, and the script uses that input to create a personalized greeting, making the program more dynamic.
+        </p>
+
+        <h2 class="sub-heading">Code: `hello_modified.py`</h2>
+        <pre>
+# Ask the user for their name and store it in the 'name' variable
+name = input("What's your name? ") 
+
+# You can keep the 'goal' fixed or also make it ask for input
+goal = "AI Native builder"
+
+# Now, use the 'name' variable (which holds the user's input) in the message
+print(f"Hello, my name is {name}. I'm learning AI to become an awesome {goal}.")
+        </pre>
+
+        <nav>
+            <a href="#welcome">Previous: Simple Greeting</a>
+            <a href="#home">Back to Main</a>
+            <a href="#special-greeting">Next: Making Decisions</a>
+        </nav>
+    </section>
+
+    <!-- 3. Use if/else logic (special_greeting.py) Section -->
+    <section id="special-greeting" class="content-section text-center">
+        <h1 class="section-heading">3. Making Decisions (If/Else)</h1>
+
+        <p class="text-lg text-gray-700 leading-relaxed mt-4 mb-8 px-4">
+            This script demonstrates how programs can make decisions using `if/else` logic. It checks if the name the user entered matches a specific "special" name. If it matches, a unique greeting is displayed; otherwise, a general greeting is shown. This allows the program to respond differently based on conditions.
+        </p>
+
+        <h2 class="sub-heading">Code: `special_greeting.py`</h2>
+        <pre>
+# Define the special name you want to check for
+# Remember to replace "[Your Name]" with the actual name you want to use, e.g., "Alice" or "John"
+SPECIAL_NAME = "Yuko" 
+
+# Ask the user for their name and store it in the 'name' variable
+name = input("What's your name? ") 
+
+# You can keep the 'goal' fixed or also make it ask for input
+goal = "AI Native builder"
+
+# Now, use an if/else statement to check the name
+if name == SPECIAL_NAME:
+    # Special welcome message for the designated name
+    print(f"Hey, it's the awesome AI Director, {name}!")
+else:
+    # Regular greeting for any other name
+    print(f"Hello, my name is {name}. I'm learning AI to become an awesome {goal}.")
+        </pre>
+
+        <nav>
+            <a href="#hello-modified">Previous: User Input</a>
+            <a href="#home">Back to Main</a>
+            <a href="#questions">Next: Questions?</a>
+        </nav>
+    </section>
+
+    <!-- Final Page: Questions? Ask AI! Section -->
+    <section id="questions" class="content-section text-center final-page-content">
+        <h1 class="final-page-heading">Questions?</h1>
+        <h2 class="final-page-sub-heading">Ask AI! 😄</h2>
+        <nav>
+            <a href="#special-greeting">Previous: Making Decisions</a>
+            <a href="#home">Back to Main</a>
+        </nav>
+    </section>
+
+</body>
+</html>
