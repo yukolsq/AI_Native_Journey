@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI What If Story Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">\
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 90%;
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="container bg-white p-8 rounded-xl shadow-lg w-full flex flex-col items-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">AI What If Story Generator</h1>
+
+        <!-- Input Section -->
+        <div class="w-full mb-6">
+            <div class="mb-4">
+                <label for="movieTitle" class="block text-gray-700 text-sm font-semibold mb-2">Movie Title:</label>
+                <input type="text" id="movieTitle" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm" placeholder="e.g., Star Wars: A New Hope">
+            </div>
+            <div class="mb-6">
+                <label for="whatIfScenario" class="block text-gray-700 text-sm font-semibold mb-2">What If Scenario:</label>
+                <textarea id="whatIfScenario" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm resize-y" placeholder="e.g., What if Darth Vader joined the Rebel Alliance?"></textarea>
+            </div>
+            <button id="generateBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 ease-in-out shadow-md hover:shadow-lg">
+                Generate Story & Scenes
+            </button>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden flex flex-col items-center text-blue-600 mb-6">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-3"></div>
+            <p class="text-lg">Generating your "What If" story and visuals...</p>
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative w-full mb-6" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline" id="errorText"></span>
+        </div>
+
+        <!-- Output Section -->
+        <div id="outputSection" class="w-full hidden">
+            <h2 class="text-2xl font-bold text-gray-800 mt-8 mb-4 text-center">The "What If" Story</h2>
+            <div id="storyOutput" class="bg-gray-50 p-6 rounded-lg border border-gray-200 mb-8 text-gray-800 leading-relaxed whitespace-pre-wrap shadow-inner">
+                <!-- Story will be inserted here -->
+            </div>
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">Key Scenes</h2>
+            <div id="scenesOutput" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Scenes and images will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const generateBtn = document.getElementById('generateBtn');
+        const movieTitleInput = document.getElementById('movieTitle');
+        const whatIfScenarioInput = document.getElementById('whatIfScenario');
+        const loadingDiv = document.getElementById('loading');
+        const outputSection = document.getElementById('outputSection');
+        const storyOutput = document.getElementById('storyOutput');
+        const scenesOutput = document.getElementById('scenesOutput');
+        const errorMessageDiv = document.getElementById('errorMessage');
+        const errorTextSpan = document.getElementById('errorText');
+
+        // Initialize Firebase variables (provided by the Canvas environment)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        generateBtn.addEventListener('click', generateStory);
+
+        async function generateStory() {
+            const movieTitle = movieTitleInput.value.trim();
+            const whatIfScenario = whatIfScenarioInput.value.trim();
+
+            if (!movieTitle || !whatIfScenario) {
+                showError("Please enter both a movie title and a 'what if' scenario.");
+                return;
+            }
+
+            hideError();
+            showLoading();
+            outputSection.classList.add('hidden');
+            storyOutput.innerHTML = '';
+            scenesOutput.innerHTML = '';
+
+            try {
+                // Step 1: Generate the narrative and scene descriptions using gemini-2.0-flash
+                const narrativePrompt = `Generate a creative "what if" story for the movie "${movieTitle}" based on the scenario: "${whatIfScenario}". The story should be between 150-300 words.
+                Also, identify 2-3 key scenes from this new narrative that would be visually striking. For each scene, provide a brief, vivid, and highly descriptive prompt (max 20 words) for a photorealistic image generation AI. Focus on concrete visual elements, actions, and objects, avoiding abstract concepts or subtle emotions that are difficult to visualize directly.
+                Return the output as a JSON object with the following structure:
+                {
+                    "title": "New Story Title",
+                    "narrative": "The full story text...",
+                    "scenes": [
+                        {"description": "Description for scene 1"},
+                        {"description": "Description for scene 2"},
+                        {"description": "Description for scene 3"}
+                    ]
+                }`;
+
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: narrativePrompt }] });
+
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "title": { "type": "STRING" },
+                                "narrative": { "type": "STRING" },
+                                "scenes": {
+                                    "type": "ARRAY",
+                                    "items": {
+                                        "type": "OBJECT",
+                                        "properties": {
+                                            "description": { "type": "STRING" }
+                                        }
+                                    }
+                                }
+                            },
+                            "propertyOrdering": ["title", "narrative", "scenes"]
+                        }
+                    }
+                };
+
+                const apiKey = ""; // Canvas will provide this in runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!result.candidates || result.candidates.length === 0 || !result.candidates[0].content || !result.candidates[0].content.parts || result.candidates[0].content.parts.length === 0) {
+                    throw new Error("Failed to generate narrative or scenes. Please try again.");
+                }
+
+                const jsonString = result.candidates[0].content.parts[0].text;
+                const parsedResult = JSON.parse(jsonString);
+
+                storyOutput.innerHTML = `<h3 class="text-xl font-semibold mb-4 text-center">${parsedResult.title}</h3>` + parsedResult.narrative;
+
+                // Step 2: Generate images for each scene using imagen-3.0-generate-002
+                for (const scene of parsedResult.scenes) {
+                    const sceneDiv = document.createElement('div');
+                    sceneDiv.className = 'bg-gray-50 p-4 rounded-lg border border-gray-200 shadow-sm';
+                    sceneDiv.innerHTML = `
+                        <p class="text-gray-700 font-medium mb-3">${scene.description}</p>
+                        <div class="image-placeholder flex items-center justify-center bg-gray-200 rounded-lg overflow-hidden h-48 mb-2">
+                            <div class="animate-pulse bg-gray-300 w-full h-full flex items-center justify-center text-gray-500">Generating image...</div>
+                        </div>
+                    `;
+                    scenesOutput.appendChild(sceneDiv);
+
+                    try {
+                        const imagePayload = { instances: { prompt: scene.description }, parameters: { "sampleCount": 1} };
+                        const imageApiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+                        const imageResponse = await fetch(imageApiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(imagePayload)
+                        });
+
+                        const imageResult = await imageResponse.json();
+
+                        // More detailed check for image generation success
+                        if (imageResult.predictions && imageResult.predictions.length > 0 && imageResult.predictions[0].bytesBase64Encoded) {
+                            const imageUrl = `data:image/png;base64,${imageResult.predictions[0].bytesBase64Encoded}`;
+                            const imgElement = document.createElement('img');
+                            imgElement.src = imageUrl;
+                            imgElement.alt = scene.description;
+                            imgElement.className = 'w-full h-full object-cover rounded-lg';
+                            sceneDiv.querySelector('.image-placeholder').replaceWith(imgElement);
+                        } else {
+                            // Log the full imageResult for debugging
+                            console.error("Imagen API response was unexpected or empty:", imageResult);
+                            const placeholderUrl = `https://placehold.co/400x300/CCCCCC/000000?text=Image+Unavailable`; // Generic placeholder
+                            const imgElement = document.createElement('img');
+                            imgElement.src = placeholderUrl;
+                            imgElement.alt = `Image failed for: ${scene.description}`;
+                            imgElement.className = 'w-full h-full object-cover rounded-lg'; // Maintain styling
+                            sceneDiv.querySelector('.image-placeholder').replaceWith(imgElement);
+
+                            const errorP = document.createElement('p');
+                            errorP.className = 'text-red-500 text-xs mt-1 text-center';
+                            errorP.textContent = `Image failed. Try a different scenario.`;
+                            sceneDiv.appendChild(errorP);
+                        }
+                    } catch (imageError) {
+                        console.error("Image generation error:", imageError);
+                        const placeholderUrl = `https://placehold.co/400x300/CCCCCC/000000?text=Image+Unavailable`; // Generic placeholder
+                        const imgElement = document.createElement('img');
+                        imgElement.src = placeholderUrl;
+                        imgElement.alt = `Image failed for: ${imageError.message}`;
+                        imgElement.className = 'w-full h-full object-cover rounded-lg'; // Maintain styling
+                        sceneDiv.querySelector('.image-placeholder').replaceWith(imgElement);
+
+                        const errorP = document.createElement('p');
+                        errorP.className = 'text-red-500 text-xs mt-1 text-center';
+                        errorP.textContent = `Image failed. Try a different scenario.`;
+                        sceneDiv.appendChild(errorP);
+                    }
+                }
+
+                outputSection.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Overall generation error:", error);
+                showError(`An error occurred: ${error.message}. Please try again.`);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function showLoading() {
+            loadingDiv.classList.remove('hidden');
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
+        function hideLoading() {
+            loadingDiv.classList.add('hidden');
+            generateBtn.disabled = false;
+            generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function showError(message) {
+            errorMessageDiv.classList.remove('hidden');
+            errorTextSpan.textContent = message;
+        }
+
+        function hideError() {
+            errorMessageDiv.classList.add('hidden');
+            errorTextSpan.textContent = '';
+        }
+    </script>
+</body>
+</html>
