@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gmail Mobile Compose Redesign</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.2/dist/index.min.js"></script>
+</head>
+<body>
+  <div class="compose-window">
+    <div class="header">
+      <p>New Message</p>
+    </div>
+
+    <div class="field-group">
+      <label for="to">To</label>
+      <input type="email" id="to" class="input" placeholder="Add recipient" />
+    </div>
+
+    <div class="field-group">
+      <label for="from">From</label>
+      <div class="from-static">yuko.ichihara@pursuit.org</div>
+    </div>
+
+    <div class="field-group">
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" class="input" placeholder="Add subject" />
+    </div>
+
+    <div class="body" contenteditable="true" placeholder="Write your message..."></div>
+
+    <div class="formatting-toolbar">
+      <button class="format-btn" data-command="bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
+      <button class="format-btn" data-command="italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
+      <button class="format-btn" data-command="underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
+    </div>
+
+    <div class="action-toolbar">
+      <button title="Attach file"><i class="fa-solid fa-paperclip"></i></button>
+      <button title="Insert image"><i class="fa-solid fa-image"></i></button>
+      <button class="emoji-btn" title="Emoji"><i class="fa-regular fa-face-smile"></i></button>
+      <button title="Confidential mode"><i class="fa-solid fa-lock"></i></button>
+      <button title="Delete draft"><i class="fa-solid fa-trash"></i></button>
+      <button class="send" title="Send"><i class="fa-solid fa-paper-plane"></i> Send</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+

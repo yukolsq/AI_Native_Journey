@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form with Validation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input.error, select.error, textarea.error {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        input.success, select.success, textarea.success {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 0.85em;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e1e5e9;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            transition: all 0.3s ease;
+            width: 0%;
+        }
+
+        .weak { background: #e74c3c; }
+        .medium { background: #f39c12; }
+        .strong { background: #27ae60; }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .form-success {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .form-success h2 {
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        .form-success p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Form</h1>
+        
+        <form id="registrationForm" novalidate>
+            <div class="row">
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                    <div class="error-message" id="firstNameError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                    <div class="error-message" id="lastNameError"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
+                <div class="error-message" id="emailError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890">
+                <div class="error-message" id="phoneError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required>
+                <div class="password-strength" id="passwordStrength"></div>
+                <div class="strength-bar">
+                    <div class="strength-fill" id="strengthFill"></div>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    <div class="error-message" id="dateOfBirthError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                        <option value="prefer-not">Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea id="address" name="address" rows="3" placeholder="Enter your full address"></textarea>
+                <div class="error-message" id="addressError"></div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city">
+                    <div class="error-message" id="cityError"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code</label>
+                    <input type="text" id="zipCode" name="zipCode">
+                    <div class="error-message" id="zipCodeError"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="interests">Interests</label>
+                <select id="interests" name="interests" multiple>
+                    <option value="technology">Technology</option>
+                    <option value="sports">Sports</option>
+                    <option value="music">Music</option>
+                    <option value="reading">Reading</option>
+                    <option value="travel">Travel</option>
+                    <option value="cooking">Cooking</option>
+                    <option value="art">Art</option>
+                    <option value="gaming">Gaming</option>
+                </select>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="newsletter" name="newsletter">
+                <label for="newsletter">Subscribe to newsletter</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the Terms and Conditions *</label>
+                <div class="error-message" id="termsError"></div>
+            </div>
+
+            <button type="submit" id="submitBtn">Create Account</button>
+        </form>
+
+        <div class="form-success" id="formSuccess">
+            <h2>🎉 Registration Successful!</h2>
+            <p>Thank you for registering. We've sent a confirmation email to your address.</p>
+        </div>
+    </div>
+
+    <script>
+        class FormValidator {
+            constructor() {
+                this.form = document.getElementById('registrationForm');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.formSuccess = document.getElementById('formSuccess');
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.setupPasswordStrength();
+            }
+
+            setupEventListeners() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+                
+                // Real-time validation
+                const inputs = this.form.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearError(input));
+                });
+
+                // Password strength check
+                document.getElementById('password').addEventListener('input', (e) => {
+                    this.checkPasswordStrength(e.target.value);
+                });
+            }
+
+            validateField(field) {
+                const value = field.value.trim();
+                const fieldName = field.name;
+                let isValid = true;
+                let errorMessage = '';
+
+                // Required field validation
+                if (field.hasAttribute('required') && !value) {
+                    isValid = false;
+                    errorMessage = `${this.getFieldLabel(field)} is required`;
+                }
+
+                // Email validation
+                if (fieldName === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid email address';
+                    }
+                }
+
+                // Phone validation
+                if (fieldName === 'phone' && value) {
+                    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+                    if (!phoneRegex.test(value.replace(/[\s\-\(\)]/g, ''))) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid phone number';
+                    }
+                }
+
+                // ZIP code validation
+                if (fieldName === 'zipCode' && value) {
+                    const zipRegex = /^\d{5}(-\d{4})?$/;
+                    if (!zipRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Please enter a valid ZIP code';
+                    }
+                }
+
+                // Date validation
+                if (fieldName === 'dateOfBirth' && value) {
+                    const selectedDate = new Date(value);
+                    const today = new Date();
+                    const age = today.getFullYear() - selectedDate.getFullYear();
+                    
+                    if (selectedDate > today) {
+                        isValid = false;
+                        errorMessage = 'Date of birth cannot be in the future';
+                    } else if (age < 13) {
+                        isValid = false;
+                        errorMessage = 'You must be at least 13 years old';
+                    }
+                }
+
+                // Name validation
+                if ((fieldName === 'firstName' || fieldName === 'lastName') && value) {
+                    const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+                    if (!nameRegex.test(value)) {
+                        isValid = false;
+                        errorMessage = 'Name should contain only letters and spaces (2-50 characters)';
+                    }
+                }
+
+                this.showFieldValidation(field, isValid, errorMessage);
+                return isValid;
+            }
+
+            validatePassword() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                let isValid = true;
+
+                // Password requirements
+                if (password.length < 8) {
+                    this.showFieldValidation(document.getElementById('password'), false, 'Password must be at least 8 characters long');
+                    isValid = false;
+                } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                    this.showFieldValidation(document.getElementById('password'), false, 'Password must contain at least one uppercase letter, one lowercase letter, and one number');
+                    isValid = false;
+                }
+
+                // Confirm password
+                if (password !== confirmPassword) {
+                    this.showFieldValidation(document.getElementById('confirmPassword'), false, 'Passwords do not match');
+                    isValid = false;
+                }
+
+                return isValid;
+            }
+
+            checkPasswordStrength(password) {
+                const strengthDiv = document.getElementById('passwordStrength');
+                const strengthFill = document.getElementById('strengthFill');
+                
+                let strength = 0;
+                let strengthText = '';
+                let strengthClass = '';
+
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/\d/.test(password)) strength++;
+                if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+                switch (strength) {
+                    case 0:
+                    case 1:
+                        strengthText = 'Very Weak';
+                        strengthClass = 'weak';
+                        break;
+                    case 2:
+                        strengthText = 'Weak';
+                        strengthClass = 'weak';
+                        break;
+                    case 3:
+                        strengthText = 'Medium';
+                        strengthClass = 'medium';
+                        break;
+                    case 4:
+                        strengthText = 'Strong';
+                        strengthClass = 'strong';
+                        break;
+                    case 5:
+                        strengthText = 'Very Strong';
+                        strengthClass = 'strong';
+                        break;
+                }
+
+                strengthDiv.textContent = `Password Strength: ${strengthText}`;
+                strengthFill.className = `strength-fill ${strengthClass}`;
+                strengthFill.style.width = `${(strength / 5) * 100}%`;
+            }
+
+            showFieldValidation(field, isValid, message = '') {
+                const errorElement = document.getElementById(`${field.name}Error`);
+                
+                field.classList.remove('error', 'success');
+                
+                if (isValid) {
+                    field.classList.add('success');
+                    if (errorElement) {
+                        errorElement.style.display = 'none';
+                    }
+                } else {
+                    field.classList.add('error');
+                    if (errorElement) {
+                        errorElement.textContent = message;
+                        errorElement.style.display = 'block';
+                    }
+                }
+            }
+
+            clearError(field) {
+                field.classList.remove('error', 'success');
+                const errorElement = document.getElementById(`${field.name}Error`);
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
+            }
+
+            getFieldLabel(field) {
+                const label = field.previousElementSibling;
+                return label ? label.textContent.replace(' *', '') : field.name;
+            }
+
+            validateAllFields() {
+                const inputs = this.form.querySelectorAll('input, select, textarea');
+                let allValid = true;
+
+                inputs.forEach(input => {
+                    if (!this.validateField(input)) {
+                        allValid = false;
+                    }
+                });
+
+                if (!this.validatePassword()) {
+                    allValid = false;
+                }
+
+                return allValid;
+            }
+
+            async handleSubmit(e) {
+                e.preventDefault();
+                
+                this.submitBtn.disabled = true;
+                this.submitBtn.textContent = 'Validating...';
+
+                // Simulate validation delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                if (this.validateAllFields()) {
+                    this.showSuccess();
+                } else {
+                    this.submitBtn.disabled = false;
+                    this.submitBtn.textContent = 'Create Account';
+                }
+            }
+
+            showSuccess() {
+                this.form.style.display = 'none';
+                this.formSuccess.style.display = 'block';
+                
+                // Reset form after showing success
+                setTimeout(() => {
+                    this.form.reset();
+                    this.form.style.display = 'block';
+                    this.formSuccess.style.display = 'none';
+                    this.submitBtn.disabled = false;
+                    this.submitBtn.textContent = 'Create Account';
+                    
+                    // Clear all validation states
+                    const inputs = this.form.querySelectorAll('input, select, textarea');
+                    inputs.forEach(input => {
+                        input.classList.remove('error', 'success');
+                    });
+                }, 5000);
+            }
+        }
+
+        // Initialize form validator when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new FormValidator();
+        });
+    </script>
+</body>
+</html> 
